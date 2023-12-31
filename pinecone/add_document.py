@@ -24,6 +24,12 @@ def initialize_vectorstore():
     )
 
     index_name = os.environ["PINECONE_INDEX"]
+
+    if index_name in pinecone.list_indexes():
+        pinecone.delete_index(index_name)
+
+    pinecone.create_index(name=index_name, metric="cosine", dimension=1536)
+
     embeddings = OpenAIEmbeddings()
     return Pinecone.from_existing_index(index_name, embeddings)
 
